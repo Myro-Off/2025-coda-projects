@@ -1,242 +1,235 @@
 <?php
+session_start();
 
-// --- 1. Configuration & Ressources ---
-$choices = ["pierre", "feuille", "ciseaux", "lezard", "spock"];
+// --- 1. Configuration & Données ---
+$moves = ["pierre", "feuille", "ciseaux", "lezard", "spock"];
 
-// SVG Icons
-$svgIcons = [
-    "pierre" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.rock-base { fill: #95a5a6; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; } .rock-detail { fill: none; stroke: #2c3e50; stroke-width: 3; stroke-linecap: round; opacity: 0.5; }</style></defs><path class="rock-base" d="M30,15 C55,5 80,15 90,40 C100,65 90,90 60,95 C30,100 10,85 5,55 C0,25 15,20 30,15 Z" /><path class="rock-detail" d="M35,35 Q50,50 65,40" /><path class="rock-detail" d="M55,70 Q70,80 80,60" /><path class="rock-detail" d="M20,55 Q30,65 25,75" /></svg>',
-
-    "feuille" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.paper-base { fill: #ecf0f1; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; } .paper-fold { fill: none; stroke: #bdc3c7; stroke-width: 2; stroke-linecap: round; }</style></defs><polygon class="paper-base" points="10,5 85,10 95,30 90,90 75,95 20,90 5,75 5,30" /><path class="paper-fold" d="M10,30 L80,25" /><path class="paper-fold" d="M15,80 L75,85" /><path class="paper-fold" d="M30,10 L35,90" /><path class="paper-fold" d="M20,50 L85,55" /></svg>',
-
-    "ciseaux" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.ciseaux-contour { fill: none; stroke: #2c3e50; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; } .ciseaux-metal { fill: #bdc3c7; } .ciseaux-poignee { fill: #e74c3c; } .ciseaux-pivot { fill: #34495e; }</style><g id="demi-ciseau"><path class="ciseaux-metal ciseaux-contour" d="M 35,50 L 95,35 Q 65,55 35,58 Z" /><path class="ciseaux-poignee ciseaux-contour" d="M 35,50 C 25,50 15,55 10,65 C 5,75 5,85 15,92 C 25,99 40,95 45,85 C 50,75 45,60 35,50 Z M 20,70 C 20,65 25,62 30,65 C 35,68 38,75 35,80 C 32,85 25,88 20,85 C 15,82 15,75 20,70 Z" /></g></defs><g transform="translate(50,50)"><g transform="rotate(15) translate(-35, -50)"><use href="#demi-ciseau" transform="scale(1, -1) translate(0, -100)"/></g><g transform="rotate(-15) translate(-35, -50)"><use href="#demi-ciseau"/></g><circle class="ciseaux-pivot ciseaux-contour" cx="0" cy="0" r="5" stroke-width="3"/></g></svg>',
-
-    "lezard" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.lizard-body { fill: #2ecc71; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; } .lizard-eye { fill: #f1c40f; stroke: #2c3e50; stroke-width: 2; }</style></defs><path class="lizard-body" d="M50,15 C60,15 65,25 65,35 C65,45 55,50 55,65 C55,80 75,70 85,55 C90,45 95,50 90,65 C80,90 40,95 30,75 C25,65 45,60 45,35 C45,25 40,15 50,15 Z" /><circle class="lizard-eye" cx="58" cy="28" r="4" /><path class="lizard-body" d="M30,35 L15,25" /><path class="lizard-body" d="M70,35 L85,25" /><path class="lizard-body" d="M30,65 L15,75" /><path class="lizard-body" d="M55,80 L65,95" /></svg>',
-
-    "spock" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="100" height="100"><defs><style>.k{fill:none;stroke:#2c3e50;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.s{fill:#f3d2b5}.b{fill:#3498db}</style></defs><g transform="translate(100,250)"><rect class="k" style="fill:#2c3e50" x="0" y="0" width="45" height="100" rx="5"/><rect class="k" style="fill:#2c3e50" x="55" y="0" width="45" height="100" rx="5"/><path class="k" style="fill:#1a252f" d="M-5,100L50,100L55,130L-10,130Z"/><path class="k" style="fill:#1a252f" d="M50,100L105,100L110,130L45,130Z"/></g><g transform="translate(90,130)"><path class="b k" d="M10,0L110,0L120,130L0,130Z"/><path class="k" style="fill:#2c3e50" d="M35,0Q60,20 85,0L110,0L10,0Z"/><path class="k" style="fill:#f1c40f" d="M85,30L100,40L95,55Q85,45 75,55L70,40Z"/></g><g transform="translate(115,30)"><path class="s k" d="M10,60L-15,35L10,45Z"/><path class="s k" d="M60,60L85,35L60,45Z"/><rect class="s k" x="10" y="20" width="50" height="70" rx="20" ry="25"/><path class="k" style="fill:#2c3e50" d="M10,35L60,35L65,20Q35,-10 5,20Z"/><path class="k" d="M15,45Q25,30 33,45"/><path class="k" d="M37,45Q45,30 55,45"/><circle fill="#2c3e50" cx="25" cy="55" r="3"/><circle fill="#2c3e50" cx="45" cy="55" r="3"/><line class="k" x1="25" y1="75" x2="45" y2="75"/></g><g transform="translate(70,135)"><rect class="b k" x="0" y="0" width="30" height="80" rx="10" transform="rotate(10)"/><circle class="s k" cx="0" cy="85" r="15" transform="translate(-5,0)"/></g><g transform="translate(200,140)"><rect class="b k" x="0" y="0" width="30" height="70" rx="10" transform="rotate(-40)"/><circle class="s k" cx="35" cy="55" r="15"/><g transform="translate(20,35) rotate(-10)"><rect class="k" style="fill:#7f8c8d" x="5" y="15" width="25" height="30" rx="5"/><path class="k" style="fill:#95a5a6" d="M0,0L50,0L55,15L-5,15Z"/><rect class="k" style="fill:#95a5a6" x="50" y="2" width="10" height="11"/><rect class="k" style="fill:#e74c3c" x="10" y="-5" width="10" height="5"/></g></g></svg>'
+// Règles : clé gagne contre valeurs
+$rules = [
+        "pierre"  => ["ciseaux", "lezard"],
+        "feuille" => ["pierre", "spock"],
+        "ciseaux" => ["feuille", "lezard"],
+        "lezard"  => ["feuille", "spock"],
+        "spock"   => ["pierre", "ciseaux"]
 ];
 
-$defaultSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" aria-hidden="true"><line x1="18" y1="18" x2="62" y2="62" stroke="#f87171" stroke-width="8" stroke-linecap="round"/><line x1="62" y1="18" x2="18" y2="62" stroke="#f87171" stroke-width="8" stroke-linecap="round"/></svg>';
-$questionSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="47" stroke-width="5"/><path d="M35,35 C35,20 65,20 65,35 C65,45 50,45 50,60" stroke-width="5"/><line x1="50" y1="75" x2="50" y2="75.01" stroke-width="5"/></svg>';
-
-// --- 2. Logique du Jeu ---
-$playerChoice = $_GET['player'] ?? null;
-$phpChoice = in_array($playerChoice, $choices) ? $choices[array_rand($choices)] : null;
-
-// Matrice de victoire : Chaque clé bat les valeurs dans le tableau correspondant
-$winningRules = [
-    "pierre"  => ["ciseaux", "lezard"],
-    "feuille" => ["pierre", "spock"],
-    "ciseaux" => ["feuille", "lezard"],
-    "lezard"  => ["feuille", "spock"],
-    "spock"   => ["pierre", "ciseaux"]
+// Définition des icônes SVG
+$svgs = [
+        "pierre" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.rock-base { fill: #95a5a6; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; } .rock-detail { fill: none; stroke: #2c3e50; stroke-width: 3; stroke-linecap: round; opacity: 0.5; }</style></defs><path class="rock-base" d="M30,15 C55,5 80,15 90,40 C100,65 90,90 60,95 C30,100 10,85 5,55 C0,25 15,20 30,15 Z" /><path class="rock-detail" d="M35,35 Q50,50 65,40" /><path class="rock-detail" d="M55,70 Q70,80 80,60" /><path class="rock-detail" d="M20,55 Q30,65 25,75" /></svg>',
+        "feuille" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.paper-base { fill: #ecf0f1; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; } .paper-fold { fill: none; stroke: #bdc3c7; stroke-width: 2; stroke-linecap: round; }</style></defs><polygon class="paper-base" points="10,5 85,10 95,30 90,90 75,95 20,90 5,75 5,30" /><path class="paper-fold" d="M10,30 L80,25" /><path class="paper-fold" d="M15,80 L75,85" /><path class="paper-fold" d="M30,10 L35,90" /><path class="paper-fold" d="M20,50 L85,55" /></svg>',
+        "ciseaux" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.ciseaux-contour { fill: none; stroke: #2c3e50; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; } .ciseaux-metal { fill: #bdc3c7; } .ciseaux-poignee { fill: #e74c3c; } .ciseaux-pivot { fill: #34495e; }</style><g id="demi-ciseau"><path class="ciseaux-metal ciseaux-contour" d="M 35,50 L 95,35 Q 65,55 35,58 Z" /><path class="ciseaux-poignee ciseaux-contour" d="M 35,50 C 25,50 15,55 10,65 C 5,75 5,85 15,92 C 25,99 40,95 45,85 C 50,75 45,60 35,50 Z M 20,70 C 20,65 25,62 30,65 C 35,68 38,75 35,80 C 32,85 25,88 20,85 C 15,82 15,75 20,70 Z" /></g></defs><g transform="translate(50,50)"><g transform="rotate(15) translate(-35, -50)"><use href="#demi-ciseau" transform="scale(1, -1) translate(0, -100)"/></g><g transform="rotate(-15) translate(-35, -50)"><use href="#demi-ciseau"/></g><circle class="ciseaux-pivot ciseaux-contour" cx="0" cy="0" r="5" stroke-width="3"/></g></svg>',
+        "lezard" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.lizard-body { fill: #2ecc71; stroke: #2c3e50; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; } .lizard-eye { fill: #f1c40f; stroke: #2c3e50; stroke-width: 2; }</style></defs><path class="lizard-body" d="M50,15 C60,15 65,25 65,35 C65,45 55,50 55,65 C55,80 75,70 85,55 C90,45 95,50 90,65 C80,90 40,95 30,75 C25,65 45,60 45,35 C45,25 40,15 50,15 Z" /><circle class="lizard-eye" cx="58" cy="28" r="4" /><path class="lizard-body" d="M30,35 L15,25" /><path class="lizard-body" d="M70,35 L85,25" /><path class="lizard-body" d="M30,65 L15,75" /><path class="lizard-body" d="M55,80 L65,95" /></svg>',
+        "spock" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><style>.k{fill:none;stroke:#2c3e50;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.s{fill:#f3d2b5}.b{fill:#3498db}</style></defs><g transform="translate(100,250)"><rect class="k" style="fill:#2c3e50" x="0" y="0" width="45" height="100" rx="5"/><rect class="k" style="fill:#2c3e50" x="55" y="0" width="45" height="100" rx="5"/><path class="k" style="fill:#1a252f" d="M-5,100L50,100L55,130L-10,130Z"/><path class="k" style="fill:#1a252f" d="M50,100L105,100L110,130L45,130Z"/></g><g transform="translate(90,130)"><path class="b k" d="M10,0L110,0L120,130L0,130Z"/><path class="k" style="fill:#2c3e50" d="M35,0Q60,20 85,0L110,0L10,0Z"/><path class="k" style="fill:#f1c40f" d="M85,30L100,40L95,55Q85,45 75,55L70,40Z"/></g><g transform="translate(115,30)"><path class="s k" d="M10,60L-15,35L10,45Z"/><path class="s k" d="M60,60L85,35L60,45Z"/><rect class="s k" x="10" y="20" width="50" height="70" rx="20" ry="25"/><path class="k" style="fill:#2c3e50" d="M10,35L60,35L65,20Q35,-10 5,20Z"/><path class="k" d="M15,45Q25,30 33,45"/><path class="k" d="M37,45Q45,30 55,45"/><circle fill="#2c3e50" cx="25" cy="55" r="3"/><circle fill="#2c3e50" cx="45" cy="55" r="3"/><line class="k" x1="25" y1="75" x2="45" y2="75"/></g><g transform="translate(70,135)"><rect class="b k" x="0" y="0" width="30" height="80" rx="10" transform="rotate(10)"/><circle class="s k" cx="0" cy="85" r="15" transform="translate(-5,0)"/></g><g transform="translate(200,140)"><rect class="b k" x="0" y="0" width="30" height="70" rx="10" transform="rotate(-40)"/><circle class="s k" cx="35" cy="55" r="15"/><g transform="translate(20,35) rotate(-10)"><rect class="k" style="fill:#7f8c8d" x="5" y="15" width="25" height="30" rx="5"/><path class="k" style="fill:#95a5a6" d="M0,0L50,0L55,15L-5,15Z"/><rect class="k" style="fill:#95a5a6" x="50" y="2" width="10" height="11"/><rect class="k" style="fill:#e74c3c" x="10" y="-5" width="10" height="5"/></g></g></svg>',
+    // Icônes de statistiques et d'attente
+        "trophy" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#Cca530" d="M25,85 L75,85 L72,92 C72,92 70,95 65,95 L35,95 C30,95 28,92 28,92 Z" /><rect fill="#Cca530" x="35" y="75" width="30" height="12" rx="2" /><path fill="#FCD34D" d="M20,20 Q20,60 35,75 L65,75 Q80,60 80,20 L20,20 Z" /><path fill="none" stroke="#FCD34D" stroke-width="6" stroke-linecap="round" d="M22,25 C5,25 5,55 22,55" /><path fill="none" stroke="#FCD34D" stroke-width="6" stroke-linecap="round" d="M78,25 C95,25 95,55 78,55" /><path fill="rgba(255,255,255,0.4)" d="M30,20 L40,20 L35,70 Z" /></svg>',
+        "fire" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#F59E0B" d="M50,5 C50,5 20,40 20,65 C20,85 35,95 50,95 C65,95 80,85 80,65 C80,40 50,5 50,5 Z" stroke="#ffffff" stroke-width="3" /><path fill="#FCD34D" d="M50,45 C50,45 38,62 38,72 C38,80 42,85 50,85 C58,85 62,80 62,72 C62,62 50,45 50,45 Z" /></svg>',
+        "question" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="var(--card-bg)" stroke="var(--border-color)" stroke-width="5"/><path d="M35,35 C35,20 65,20 65,35 C65,45 50,45 50,60" stroke="var(--border-color)" fill="none" stroke-width="8" stroke-linecap="round"/><line x1="50" y1="78" x2="50" y2="78.01" stroke="var(--border-color)" stroke-width="8" stroke-linecap="round"/></svg>',
+        "error" => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><style>.error-cross { stroke: #e74c3c; stroke-width: 10; stroke-linecap: round; }</style></defs><circle cx="50" cy="50" r="45" fill="none" stroke="#e74c3c" stroke-width="5"/><line class="error-cross" x1="25" y1="25" x2="75" y2="75" /><line class="error-cross" x1="75" y1="25" x2="25" y2="75" /></svg>'
 ];
 
-// Calcul du résultat
-if ($playerChoice === null) {
-    $result = "";
-} elseif (!in_array($playerChoice, $choices)) {
-    $result = "";
-} elseif ($playerChoice === $phpChoice) {
-    $result = "ÉGALITÉ";
-} elseif (in_array($phpChoice, $winningRules[$playerChoice])) {
-    $result = "VOUS AVEZ GAGNÉ 🎉";
-} else {
-    $result = "VOUS AVEZ PERDU 😢";
+
+// --- 2. Gestion de l'état (Actions) ---
+
+// Changement de thème
+if (isset($_GET['toggle_theme'])) {
+    $newTheme = ($_COOKIE['theme'] ?? 'light') === 'dark' ? 'light' : 'dark';
+    setcookie('theme', $newTheme, time() + 31536000, "/"); // 1 an
+    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?'));
+    exit;
+}
+$theme = $_COOKIE['theme'] ?? 'light';
+
+// Reset complet
+if (isset($_GET['reset'])) {
+    session_destroy();
+    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?'));
+    exit;
 }
 
-// Préparation de l'affichage
-if ($playerChoice === null) {
-    $playerLabel = 'Faire un Choix';
-    $playerSvg = $questionSvg;
-    $phpLabel = 'Prêt à Dégainer';
-    $phpSvg = $questionSvg;
-} elseif (!in_array($playerChoice, $choices)) {
-    $playerLabel = 'Choix invalide';
-    $playerSvg = $defaultSvg;
-    $phpLabel = 'Arrête de Bidouiller';
-    $phpSvg = $questionSvg;
-} else {
-    $playerLabel = ucfirst($playerChoice);
-    $playerSvg = $svgIcons[$playerChoice];
-
-    $phpLabel = ucfirst($phpChoice);
-    $phpSvg = $svgIcons[$phpChoice];
+// Initialisation stats
+if (!isset($_SESSION['stats'])) {
+    $_SESSION['stats'] = ['total' => 0, 'wins' => 0, 'losses' => 0, 'ties' => 0, 'streak' => 0, 'best_streak' => 0];
+    $_SESSION['history'] = [];
 }
+
+// --- 3. Moteur de Jeu ---
+$playerMove = $_GET['player'] ?? null;
+$computerMove = null;
+$result = 'neutral'; // neutral, win, lose, tie, error
+$msg = "Choisissez une attaque !";
+
+// === LOGIQUE DE VALIDATION ET DE JEU MISE À JOUR ===
+
+// Si un coup est soumis (présent dans GET)
+if (isset($_GET['player'])) {
+    if (in_array($playerMove, $moves)) {
+        // --- Coup VALIDE : Exécution du jeu ---
+        $computerMove = $moves[array_rand($moves)];
+        $_SESSION['stats']['total']++;
+
+        if ($playerMove === $computerMove) {
+            $result = 'tie';
+            $msg = "Égalité !";
+            $_SESSION['stats']['ties']++;
+        } elseif (in_array($computerMove, $rules[$playerMove])) {
+            $result = 'win';
+            $msg = "Victoire !";
+            $_SESSION['stats']['wins']++;
+            $_SESSION['stats']['streak']++;
+            if ($_SESSION['stats']['streak'] > $_SESSION['stats']['best_streak']) {
+                $_SESSION['stats']['best_streak'] = $_SESSION['stats']['streak'];
+            }
+        } else {
+            $result = 'lose';
+            $msg = "Défaite...";
+            $_SESSION['stats']['losses']++;
+            $_SESSION['stats']['streak'] = 0;
+        }
+
+        // Historique (Garder les 5 derniers)
+        array_unshift($_SESSION['history'], ['p' => $playerMove, 'c' => $computerMove, 'res' => $result]);
+        $_SESSION['history'] = array_slice($_SESSION['history'], 0, 5);
+
+    } else {
+        // --- Coup INVALIDE : Gestion de l'erreur ---
+        $result = 'error';
+        $msg = "Entrée Invalide";
+    }
+}
+
+// Préparation Affichage
+$playerIcon = $playerMove && $result !== 'error' ? $svgs[$playerMove] : ($result === 'error' ? $svgs['error'] : $svgs['question']);
+$computerIcon = $computerMove ? $svgs[$computerMove] : ($result === 'error' ? $svgs['error'] : $svgs['question']);
+$playerLabel = $playerMove && $result !== 'error' ? ucfirst($playerMove) : ($result === 'error' ? 'Erreur' : 'En attente');
+$computerLabel = $computerMove ? ucfirst($computerMove) : ($result === 'error' ? 'Erreur' : 'En attente');
+
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="<?= $theme ?>">
 <head>
-    <meta charset="UTF-8" />
-    <title>Pierre Feuille Ciseaux Lézard Spock</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            font-family: 'Poppins', sans-serif;
-            color: #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        h1 {
-            font-weight: 600;
-            font-size: 2rem;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-            text-align: center;
-            letter-spacing: 1.2px;
-            text-shadow: 0 0 10px #3b82f6;
-        }
-        p.subtitle { font-size: 1rem; margin-bottom: 2rem; color: #94a3b8; text-align: center; }
-
-        .choices {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 3rem;
-            max-width: 800px;
-        }
-        .choice-btn {
-            background: #1e293b;
-            border-radius: 15px;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #f1f5f9;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 0 10px transparent;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            user-select: none;
-        }
-        .choice-btn svg {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 5px;
-            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3));
-            transition: transform 0.3s ease;
-        }
-        .choice-btn:hover, .choice-btn:focus {
-            background: #3b82f6;
-            border-color: #60a5fa;
-            box-shadow: 0 0 15px #3b82f6;
-            outline: none;
-            transform: translateY(-5px);
-        }
-        .choice-btn:hover svg, .choice-btn:focus svg { transform: scale(1.15) rotate(10deg); }
-
-        .result-container {
-            max-width: 600px;
-            width: 100%;
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 30px 40px;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-            text-align: center;
-        }
-        .players { display: flex; justify-content: space-around; margin-bottom: 2rem; flex-wrap: wrap; gap: 2rem; }
-        .player-box {
-            background: #334155;
-            border-radius: 20px;
-            padding: 20px;
-            flex: 1 1 150px;
-            max-width: 220px;
-            box-shadow: inset 0 0 10px #1e293b;
-            transition: background 0.3s ease;
-        }
-        .player-box h2 {
-            margin: 0 0 15px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: #60a5fa;
-            text-shadow: 0 0 5px #2563eb;
-        }
-        .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            filter: drop-shadow(0 0 5px rgba(96, 165, 250, 0.7));
-        }
-        .icon-wrapper svg {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            stroke: #f1f5f9;
-            transition: stroke 0.3s ease;
-        }
-        .player-box p { font-size: 1.1rem; font-weight: 500; color: #e0e7ff; min-height: 2rem; }
-        .result-text {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #facc15;
-            text-shadow: 0 0 10px #fbbf24;
-            margin-bottom: 1.5rem;
-            min-height: 2.5rem;
-        }
-        .reset-btn {
-            background: transparent;
-            border: 2px solid #fbbf24;
-            color: #fbbf24;
-            font-weight: 600;
-            font-size: 1rem;
-            padding: 10px 30px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            user-select: none;
-        }
-        .reset-btn:hover, .reset-btn:focus {
-            background: #fbbf24;
-            color: #1e293b;
-            box-shadow: 0 0 15px #fbbf24;
-            outline: none;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu PHP: Pierre Feuille Ciseaux</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Pierre, Feuille, Ciseaux,<br>Lézard, Spock</h1>
-<p class="subtitle">Choisissez votre arme !</p>
 
-<div class="choices">
-    <a href="?player=pierre" class="choice-btn"><?= $svgIcons['pierre'] ?> Pierre</a>
-    <a href="?player=feuille" class="choice-btn"><?= $svgIcons['feuille'] ?> Feuille</a>
-    <a href="?player=ciseaux" class="choice-btn"><?= $svgIcons['ciseaux'] ?> Ciseaux</a>
-    <a href="?player=lezard" class="choice-btn"><?= $svgIcons['lezard'] ?> Lézard</a>
-    <a href="?player=spock" class="choice-btn"><?= $svgIcons['spock'] ?> Spock</a>
+<a href="?toggle_theme=1" class="theme-btn"><?= $theme === 'dark' ? '☀️ Clair' : '🌙 Sombre' ?></a>
+
+<div class="main-layout">
+
+    <main class="game-section">
+        <h1>Les Armes du Destin</h1>
+        <p class="subtitle">Sélectionnez votre arme</p>
+
+        <div class="choices-grid">
+            <?php foreach($moves as $moveName): ?>
+                <a href="?player=<?= $moveName ?>" class="choice-card">
+                    <?= $svgs[$moveName] ?>
+                    <span><?= ucfirst($moveName) ?></span>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
+        <?php
+        // Ajout de la classe CSS pour l'erreur
+        $resultClass = $result === 'win' ? 'win' : ($result === 'lose' ? 'lose' : ($result === 'tie' ? 'tie' : ($result === 'error' ? 'lose' : '')));
+        $msgClass = $result === 'win' ? 'text-win' : ($result === 'lose' ? 'text-lose' : ($result === 'tie' ? 'text-tie' : ($result === 'error' ? 'text-lose' : '')));
+        ?>
+
+        <section class="result-box <?= $resultClass ?> <?= $playerMove ? 'animate-pop' : '' ?>">
+            <div class="result-msg <?= $msgClass ?>"><?= $msg ?></div>
+
+            <div class="duel-display">
+                <div class="fighter">
+                    <?php if($result === 'win'): ?><div class="corner-badge"><?= $svgs['trophy'] ?></div><?php endif; ?>
+                    <h2>Vous</h2>
+                    <div class="fighter-icon"><?= $playerIcon ?></div>
+                    <p><?= $playerLabel ?></p>
+                </div>
+
+                <div style="font-weight:900; font-size:1.2rem;">VS</div>
+
+                <div class="fighter">
+                    <?php if($result === 'lose'): ?><div class="corner-badge"><?= $svgs['trophy'] ?></div><?php endif; ?>
+                    <h2>Ordi</h2>
+                    <div class="fighter-icon"><?= $computerIcon ?></div>
+                    <p><?= $computerLabel ?></p>
+                </div>
+            </div>
+        </section>
+
+        <div class="rules-area">
+            <h3 class="box-title">Règles du jeu</h3>
+            <div class="rules-grid">
+                <?php foreach($rules as $winner => $losers): ?>
+                    <div class="rule-item">
+                        <div class="rule-vs"><?= $svgs[$winner] ?></div>
+                        <span style="font-size:0.7rem; font-weight:700; margin:5px 0;">bat</span>
+                        <div class="rule-vs" style="display:flex; gap:5px;">
+                            <?php foreach($losers as $loserMove) echo $svgs[$loserMove]; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </main>
+
+    <aside class="stats-section">
+
+        <div class="stats-box">
+            <h3 class="box-title">Tableau de bord</h3>
+            <div class="stats-grid">
+                <div class="stat-item win">
+                    <span class="stat-label">Victoires</span> <span class="stat-val"><?= $_SESSION['stats']['wins'] ?></span>
+                </div>
+                <div class="stat-item lose">
+                    <span class="stat-label">Défaites</span> <span class="stat-val"><?= $_SESSION['stats']['losses'] ?></span>
+                </div>
+                <div class="stat-item tie">
+                    <span class="stat-label">Égalités</span> <span class="stat-val"><?= $_SESSION['stats']['ties'] ?></span>
+                </div>
+                <div class="stat-item total">
+                    <span class="stat-label">Total</span> <span class="stat-val"><?= $_SESSION['stats']['total'] ?></span>
+                </div>
+                <div class="stat-item special">
+                    <span class="stat-label"><span class="mini-icon"><?= $svgs['fire'] ?></span> Série</span>
+                    <span class="stat-val"><?= $_SESSION['stats']['streak'] ?></span>
+                </div>
+                <div class="stat-item special">
+                    <span class="stat-label"><span class="mini-icon"><?= $svgs['trophy'] ?></span> Record Série</span>
+                    <span class="stat-val"><?= $_SESSION['stats']['best_streak'] ?></span>
+                </div>
+            </div>
+            <a href="?reset=1" class="reset-btn">Réinitialiser</a>
+        </div>
+
+        <?php if(!empty($_SESSION['history'])): ?>
+            <div class="stats-box">
+                <h3 class="box-title">Derniers combats</h3>
+                <div class="history-list">
+                    <?php foreach($_SESSION['history'] as $historyEntry): ?>
+                        <?php
+                        $color = ($historyEntry['res'] === 'win') ? 'var(--green)' : (($historyEntry['res'] === 'lose') ? 'var(--red)' : 'var(--yellow)');
+                        $label = ($historyEntry['res'] === 'win') ? 'Gagné' : (($historyEntry['res'] === 'lose') ? 'Perdu' : 'Égalité');
+                        ?>
+                        <div class="history-row" style="border-left-color: <?= $color ?>">
+                            <div class="h-icons">
+                                <?= $svgs[$historyEntry['p']] ?>
+                                <span style="font-size:0.8rem; font-weight:800; color:var(--subtext-color);">vs</span>
+                                <?= $svgs[$historyEntry['c']] ?>
+                            </div>
+                            <div style="font-weight:800; text-transform:uppercase; font-size:0.8rem; color:<?= $color ?>">
+                                <?= $label ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
+    </aside>
 </div>
-
-<section class="result-container">
-    <div class="players">
-        <div class="player-box">
-            <h2>Vous</h2>
-            <div class="icon-wrapper"><?= $playerSvg ?></div>
-            <p><?= $playerLabel ?></p>
-        </div>
-        <div class="player-box">
-            <h2>Ordinateur</h2> <div class="icon-wrapper"><?= $phpSvg ?></div>
-            <p><?= $phpLabel ?></p>
-        </div>
-    </div>
-    <div class="result-text"><?= $result ?></div>
-    <a href="./" class="reset-btn">🔄 Réinitialiser</a>
-</section>
 </body>
 </html>

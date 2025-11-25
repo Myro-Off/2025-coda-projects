@@ -1,0 +1,414 @@
+/* --- Variables & Thèmes --- */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #4b4b4b;
+    --subtext-color: #777;
+    --card-bg: #ffffff;
+    --border-color: #e5e5e5;
+    --green: #58cc02;
+    --red: #ff4b4b;
+    --blue: #1cb0f6;
+    --yellow: #ffc800;
+    --orange: #ff9600;
+    --font-main: 'Nunito', sans-serif;
+}
+
+[data-theme="dark"] {
+    --bg-color: #131f24;
+    --text-color: #f7f7f7;
+    --subtext-color: #a0a0a0;
+    --card-bg: #202f36;
+    --border-color: #37464f;
+}
+
+/* --- Base & Layout --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 40px;
+}
+
+.game-section {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stats-section {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Composants UI --- */
+h1 {
+    margin: 10px 0 0.5rem;
+    font-weight: 800;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--subtext-color);
+    margin-bottom: 2rem;
+}
+
+/* Bouton Thème */
+.theme-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-bottom-width: 5px;
+    border-radius: 12px;
+    padding: 8px 16px;
+    color: var(--subtext-color);
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    transition: 0.1s;
+}
+
+.theme-btn:active {
+    border-bottom-width: 2px;
+    transform: translateY(3px);
+}
+
+/* Choix des armes */
+.choices-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.choice-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-bottom-width: 5px;
+    border-radius: 16px;
+    width: 100px;
+    height: 110px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.1s;
+}
+
+.choice-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--text-color);
+}
+
+.choice-card:active {
+    transform: translateY(3px);
+    border-bottom-width: 2px;
+}
+
+.choice-card svg {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+}
+
+/* Zone de Résultat */
+.result-box {
+    width: 100%;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-box.win {
+    border-color: var(--green);
+    background: rgba(88, 204, 2, 0.1);
+}
+
+.result-box.lose {
+    border-color: var(--red);
+    background: rgba(255, 75, 75, 0.1);
+}
+
+.result-box.tie {
+    border-color: var(--yellow);
+    background: rgba(255, 200, 0, 0.1);
+}
+
+.result-msg {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+}
+
+.text-win {
+    color: var(--green);
+}
+
+.text-lose {
+    color: var(--red);
+}
+
+.text-tie {
+    color: var(--yellow);
+}
+
+.duel-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.fighter {
+    flex: 1;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-bottom-width: 4px;
+    border-radius: 16px;
+    padding: 15px 0 5px 0;
+    position: relative;
+}
+
+.fighter h2 {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: var(--subtext-color);
+    text-transform: uppercase;
+}
+
+.fighter-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 10px;
+}
+
+.corner-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 50px;
+    transform: rotate(20deg);
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+/* Tableau des scores */
+.stats-box {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.box-title {
+    text-align: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--subtext-color);
+    font-size: 0.9rem;
+    margin: 0 0 15px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat-item {
+    padding: 10px 5px;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.stat-item.win {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(88, 204, 2, 0.1);
+}
+
+.stat-item.lose {
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(255, 75, 75, 0.1);
+}
+
+.stat-item.tie {
+    border-color: var(--yellow);
+    color: var(--yellow);
+    background: rgba(255, 200, 0, 0.1);
+}
+
+.stat-item.total {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: rgba(28, 176, 246, 0.1);
+}
+
+.stat-item.special {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(255, 150, 0, 0.1);
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.stat-val {
+    font-size: 1.2rem;
+    font-weight: 800;
+    display: block;
+}
+
+.mini-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Historique */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 8px 15px;
+    border-left-width: 5px;
+}
+
+.h-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.h-icons svg {
+    width: 25px;
+    height: 25px;
+}
+
+/* Règles */
+.rules-area {
+    margin-top: 10px;
+    width: 100%;
+    border-top: 2px dashed var(--border-color);
+    padding-top: 20px;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+}
+
+.rule-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.rule-vs svg {
+    width: 20px;
+    opacity: 0.8;
+}
+
+/* Utils */
+.reset-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+    padding: 8px;
+    border: 2px solid var(--red);
+    border-bottom-width: 5px;
+    border-radius: 12px;
+    color: var(--red);
+    font-weight: 800;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--card-bg);
+}
+
+.reset-btn:hover {
+    border-bottom-width: 4px;
+    transform: translateY(1px);
+    margin-bottom: 1px;
+}
+
+.reset-btn:active {
+    border-bottom-width: 2px;
+    transform: translateY(3px);
+    margin-bottom: 3px;
+}
+
+.animate-pop {
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
