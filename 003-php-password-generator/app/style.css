@@ -1,0 +1,320 @@
+/* --- Variables de Design (Couleurs inspirées) --- */
+:root {
+    --color-primary: #1cb0f6;
+    --color-secondary: #58cc02;
+    --color-text: #4b4b4b;
+    --color-background: #e5e5e5;
+    --color-card-bg: #ffffff;
+    --color-border: #cccccc;
+    --color-border-active: #b8b8b8;
+    --color-red: #ff4b4b;
+    --color-yellow: #ffc800;
+    --font-main: 'Nunito', sans-serif;
+}
+
+/* --- Base & Layout --- */
+* {
+    box-sizing: border-box;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+body {
+    font-family: var(--font-main), sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    margin: 0;
+    color: var(--color-text);
+}
+
+.container {
+    background: var(--color-card-bg);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 670px;
+    border-bottom: 5px solid var(--color-border-active);
+    margin: 1rem;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: var(--color-text);
+}
+
+/* --- Affichage du Mot de Passe --- */
+.password-display {
+    margin-bottom: 25px;
+}
+
+.password-display input {
+    width: 100%;
+    padding: 15px 10px;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: 800;
+    border: 3px solid var(--color-border);
+    border-radius: 10px;
+    background: #f7f7f7;
+    color: var(--color-text);
+    user-select: text;
+    cursor: text;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Options Groupées --- */
+.options-group {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid var(--color-border);
+    margin-bottom: 20px;
+}
+
+.options-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0 0 15px 0;
+    padding-bottom: 5px;
+    color: var(--color-primary);
+}
+
+/* --- Items de formulaire (Checkbox et Select) --- */
+.checkbox-item, .select-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    gap: 5px;
+}
+
+/* Modification pour inverser l'ordre du Select-item */
+.select-item {
+    flex-direction: row-reverse;
+    justify-content: left;
+    border-top: 1px dashed #eee;
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.checkbox-item:last-of-type {
+    border-bottom: none;
+}
+
+.checkbox-item label, .select-item label {
+    font-weight: 600;
+}
+
+/* Style du Select */
+#password_length {
+    padding: 5px 10px;
+    border: 2px solid var(--color-primary);
+    border-radius: 6px;
+    font-weight: 700;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* --- Style des Checkboxes (Hidden + Custom) --- */
+.checkbox-item input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.checkbox-item label {
+    position: relative;
+    cursor: pointer;
+    padding-left: 30px;
+}
+
+.checkbox-item label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid var(--color-primary);
+    background: #fff;
+}
+
+.checkbox-item input[type="checkbox"]:checked + label::before {
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+.checkbox-item input[type="checkbox"]:checked + label::after {
+    content: '✓';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-weight: 900;
+    color: #fff;
+}
+
+/* --- Bouton Générer --- */
+.generate-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    border-bottom: 5px solid #10729e;
+    transform: translateY(0);
+}
+
+.generate-btn:hover {
+    filter: brightness(1.05);
+}
+
+.generate-btn:active {
+    transform: translateY(5px);
+    border-bottom: 0 solid #10729e;
+    margin-bottom: 5px;
+}
+
+
+
+/* --- Validator Styles (Ajouter à style.css) --- */
+
+.validation-form {
+    margin-bottom: 30px;
+}
+
+.input-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--color-text);
+}
+
+.password-input-area input {
+    /* Hérite du style de l'input de génération, mais assure l'alignement */
+    width: 100%;
+    padding: 12px 10px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: left;
+    border: 2px solid var(--color-border);
+    border-radius: 8px;
+    background: #f7f7f7;
+}
+
+.validate-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--color-secondary); /* Couleur de validation (vert) */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    /* Ombre 3D verte */
+    border-bottom: 5px solid #3c8f00;
+    transform: translateY(0);
+}
+
+.validate-btn:active {
+    transform: translateY(5px);
+    border-bottom: 0 solid #3c8f00;
+    margin-bottom: 5px;
+}
+
+/* --- Résultats de Validation --- */
+.validation-results {
+    border-top: 2px dashed var(--color-border-active);
+    padding-top: 25px;
+}
+
+.score-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin-bottom: 15px;
+    color: var(--color-text);
+}
+
+.score-display {
+    color: var(--color-primary); /* Couleur initiale/neutre */
+}
+
+.messages-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.message-item {
+    font-weight: 600;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+
+    /* Style neutre initial */
+    background: #f0f0f0;
+    color: var(--color-text);
+    border-left: 5px solid var(--color-border);
+}
+
+/* Ces classes seront ajoutées par PHP lors de la validation */
+.message-item.valid {
+    background: #e6ffed; /* Très léger vert */
+    border-left: 5px solid var(--color-secondary);
+}
+
+.message-item.invalid {
+    background: #ffeded; /* Très léger rouge */
+    border-left: 5px solid #ff4b4b; /* Rouge */
+}
+
+
+
+
+/* --- Navigation entre les applications --- */
+
+.app-nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-border);
+}
+
+.nav-item {
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 8px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--color-text);
+    background-color: #f0f0f0;
+    border: 2px solid var(--color-border);
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background-color: var(--color-border-active);
+}
+
+.nav-item.active {
+    background-color: var(--color-primary);
+    color: var(--color-card-bg); /* Blanc */
+    border-color: var(--color-primary);
+    box-shadow: 0 3px 0 #10729e;
+}
