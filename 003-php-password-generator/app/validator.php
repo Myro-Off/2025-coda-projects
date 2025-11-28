@@ -140,9 +140,9 @@ HTML;
 // Affichage des messages de validation
 foreach ($validationMessages as $messageKey => $messageText) {
     // Détermine la classe CSS en fonction du message (Vérifie la présence de "❌" ou "✅")
-    if (strpos($messageText, '✅') !== false) {
+    if (str_contains($messageText, '✅') !== false) {
         $class = 'valid';
-    } elseif (strpos($messageText, '❌') !== false) {
+    } elseif (str_contains($messageText, '❌') !== false) {
         $class = 'invalid';
     } else {
         $class = 'neutral';
