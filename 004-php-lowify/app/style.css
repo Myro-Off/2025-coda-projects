@@ -216,11 +216,13 @@ a {
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    z-index: 1;
 }
 
 .card:hover {
     background-color: var(--bg-card-hover);
     transform: translateY(-5px);
+    z-index: 100;
 }
 
 /* Conteneur de l'image */
@@ -230,7 +232,7 @@ a {
     aspect-ratio: 1/1;
     margin-bottom: 16px;
     border-radius: var(--radius-s);
-    overflow: hidden;
+
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -253,7 +255,6 @@ a {
 
 /* Effet Zoom sur l'image au survol de la carte */
 .card:hover .card-img {
-
     filter: brightness(0.7); /* Assombrit légèrement pour faire ressortir les boutons */
 }
 
@@ -264,12 +265,11 @@ a {
     right: 10px;
     display: flex;
     gap: 10px;
-
-    /* État initial : Invisible et décalé */
+    margin: 0 1rem;
     opacity: 0;
     transform: translateY(10px);
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 10;
+    z-index: 100;
 }
 
 /* Apparition au survol */
@@ -301,7 +301,9 @@ object {
 
 /* Bouton Play */
 .action-btn.play {
-    padding-left: 4px;
+    position: absolute;
+    right: 0;
+    bottom: 15px;
 }
 
 .action-btn.play:hover {
@@ -311,12 +313,17 @@ object {
 
 /* Bouton Like */
 .action-btn.like {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: absolute;
+    right: 60px;
+    bottom: 15px;
     background-color: rgba(30, 30, 30, 0.85);
     color: var(--text-secondary);
 }
 
 .action-btn.like.outline {
     /* Cœur vide */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
 }
 
