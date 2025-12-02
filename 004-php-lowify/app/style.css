@@ -1,0 +1,1110 @@
+/* VARIABLES GLOBALES */
+:root {
+    --bg-dark: #121216;
+    --bg-sidebar: #191922;
+    --bg-card: #23232D;
+    --bg-card-hover: #2d2d39;
+    --primary: #58CC02;
+    --text-main: #FFFFFF;
+    --text-secondary: #A2A2AD;
+    --border-color: #32323D;
+    --radius-l: 24px;
+    --radius-m: 12px;
+    --radius-s: 8px;
+}
+
+/* FOND ET MISE EN PAGE GÉNÉRALE */
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-y: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+}
+
+/* LAYOUT GLOBAL */
+.app-container {
+    display: flex;
+    height: 100vh;
+    padding-bottom: 90px; /* Espace pour le player */
+    box-sizing: border-box;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 280px;
+    background-color: var(--bg-sidebar);
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border-right: 1px solid var(--border-color);
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--text-main);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-radius: var(--radius-s);
+    margin-bottom: 4px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link.active {
+    color: var(--primary);
+    background: rgba(88, 204, 2, 0.1);
+    border-left: 4px solid var(--primary);
+    padding-left: 12px;
+}
+
+.nav-section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding-left: 16px;
+    letter-spacing: 1px;
+}
+
+/* MAIN CONTENT */
+.main-view {
+    flex-grow: 1;
+    overflow-y: auto; /* Rend la zone principale scrollable */
+    padding: 30px 40px;
+    background: linear-gradient(180deg, #1f1f29 0%, var(--bg-dark) 400px);
+}
+
+/* HEADER & TITRES */
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 40px 0 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.see-all {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.see-all:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+/* BOUTONS PRIMAIRES */
+.duo-button {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: var(--radius-m);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.duo-button:hover {
+    background-color: #7BE020;
+}
+
+.duo-button:active {
+    transform: translateY(1px);
+}
+
+/* TABS NAVIGATION */
+.tabs-container {
+    display: flex;
+    gap: 30px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+.tab-link {
+    padding: 15px 0;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: relative;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.tab-link:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--text-secondary);
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-link.active {
+    color: var(--text-main);
+}
+
+.tab-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+/* ==========================================================================
+   CARDS GRID & HOVER EFFECTS
+   ========================================================================== */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: var(--bg-card);
+    padding: 16px;
+    border-radius: var(--radius-m);
+    transition: background 0.3s, transform 0.2s;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    background-color: var(--bg-card-hover);
+    transform: translateY(-5px);
+}
+
+/* Conteneur de l'image */
+.card-img-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin-bottom: 16px;
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Styles spécifiques Artiste (Rond) */
+.card.artist-mode .card-img-container {
+    border-radius: 50%;
+}
+
+.card.artist-mode .card-img {
+    border-radius: 50%;
+}
+
+/* L'image elle-même */
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Effet Zoom sur l'image au survol de la carte */
+.card:hover .card-img {
+
+    filter: brightness(0.7); /* Assombrit légèrement pour faire ressortir les boutons */
+}
+
+/* --- LE CONTENEUR DES BOUTONS (Overlay) --- */
+.card-overlay-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
+
+    /* État initial : Invisible et décalé */
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
+
+/* Apparition au survol */
+.card:hover .card-overlay-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hack pour les liens imbriqués dans <object> */
+object {
+    pointer-events: auto;
+}
+
+/* --- STYLE DES BOUTONS D'ACTION (PLAY / LIKE) --- */
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: black;
+    text-decoration: none;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s;
+}
+
+/* Bouton Play */
+.action-btn.play {
+    padding-left: 4px;
+}
+
+.action-btn.play:hover {
+    transform: scale(1.1);
+    background-color: #7BE020;
+}
+
+/* Bouton Like */
+.action-btn.like {
+    background-color: rgba(30, 30, 30, 0.85);
+    color: var(--text-secondary);
+}
+
+.action-btn.like.outline {
+    /* Cœur vide */
+    color: white;
+}
+
+.action-btn.like.active {
+    /* Cœur plein déjà liké */
+    background-color: rgba(30, 30, 30, 0.9);
+    color: #EF5466;
+}
+
+.action-btn.like:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.95);
+    color: white;
+}
+
+.action-btn.like.active:hover {
+    color: #EF5466;
+}
+
+
+/* Textes de la carte */
+.card-title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   LISTE DES PISTES (TRACKS)
+   ========================================================================== */
+.track-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: var(--radius-s);
+    transition: 0.2s;
+}
+
+.track-row:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.track-row:hover .track-num {
+    display: none;
+}
+
+.track-row:hover .track-play-icon {
+    display: block;
+}
+
+.track-num {
+    width: 30px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-align: center;
+}
+
+.track-play-icon {
+    width: 30px;
+    color: var(--primary);
+    display: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.track-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin: 0 16px;
+    object-fit: cover;
+}
+
+.track-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.track-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.track-artist {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+.track-album {
+    width: 25%;
+    color: var(--text-secondary);
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-date {
+    width: 15%;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.track-duration {
+    width: 60px;
+    text-align: right;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.track-actions {
+    width: 120px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+}
+
+
+/* PLAYER BAR */
+.player-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 90px;
+    background-color: #121216;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+}
+
+.player-left {
+    display: flex;
+    align-items: center;
+    width: 30%;
+}
+
+.player-cover {
+    width: 56px;
+    height: 56px;
+    border-radius: 4px;
+    margin-right: 16px;
+}
+
+.player-info h4 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.player-info p {
+    margin: 4px 0 0 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.player-like {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    margin-left: 20px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.player-like.active {
+    color: #E33E3E;
+}
+
+.player-center {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 8px;
+}
+
+.ctrl-btn {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.ctrl-btn:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.ctrl-btn.play {
+    font-size: 38px;
+    color: var(--text-main);
+}
+
+.ctrl-btn.play:hover {
+    color: var(--primary);
+}
+
+.progress-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.progress-bar {
+    flex-grow: 1;
+    height: 4px;
+    background: #45454F;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+}
+
+.progress-fill {
+    width: 0;
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    position: relative;
+    transition: width 0.5s;
+}
+
+/* La largeur est gérée en PHP/Inline */
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.progress-bar:hover .progress-fill::after {
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   STYLES SPÉCIFIQUES "COUPS DE COEUR" (FAVORIS)
+   ========================================================================== */
+
+/* En-tête de la playlist */
+.playlist-header-info {
+    margin-bottom: 30px;
+}
+
+.playlist-stats {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* Bouton Aléatoire */
+.shuffle-btn {
+    background-color: var(--primary);
+    color: var(--bg-dark);
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    transition: transform 0.2s;
+    text-decoration: none;
+}
+
+.shuffle-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Barre de contrôles (Play + Recherche) */
+.controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.big-play-btn {
+    width: 55px;
+    height: 55px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-dark);
+    font-size: 24px;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+}
+
+.big-play-btn:hover {
+    transform: scale(1.1);
+}
+
+.search-in-playlist {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 8px 15px;
+    border-radius: 4px;
+    color: var(--text-main);
+    width: 250px;
+}
+
+/* Tableau des titres (Style Deezer) */
+.deezer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.deezer-table th {
+    text-align: left;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 12px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.deezer-table td {
+    padding: 10px;
+    vertical-align: middle;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.deezer-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+}
+
+/* Colonne Titre (Image + Texte) */
+.col-title-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-cover-container {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.table-cover {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+/* Overlay Play sur la petite cover */
+.mini-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 4px;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.deezer-table tr:hover .mini-play-overlay {
+    opacity: 1;
+}
+
+.song-name-link {
+    color: var(--text-main);
+    font-weight: 700;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+/* --- SIDEBAR --- */
+
+.sidebar-playlist-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: background-color 0.2s;
+    border-radius: 4px;
+}
+
+.sidebar-playlist-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.sidebar-playlist-link.active-link {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+/* Carré Icône Playlist */
+.sidebar-playlist-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Style spécifique Cœur (Orange/Dégradé comme Deezer) */
+.heart-icon {
+    background: linear-gradient(135deg, #EF5466 0%, #E97332 100%);
+}
+
+/* Style Playlist Utilisateur (Violet/Bleu ou aléatoire) */
+.user-playlist-icon {
+    background: linear-gradient(135deg, #4C82F7 0%, #8C52FF 100%);
+    font-size: 18px;
+}
+
+/* Scrollbar pour la liste des playlists si trop longue */
+.playlist-nav-container {
+    overflow-y: auto;
+    max-height: calc(100vh - 450px); /* Ajuster selon la hauteur d'écran */
+}
+
+/* --- STYLES ACTIONS (TOUJOURS VISIBLES) --- */
+
+.row-actions-group {
+    /* On s'assure que c'est visible */
+    opacity: 1;
+    display: flex;
+    align-items: center;
+}
+
+/* Couleur de la poubelle */
+.table-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.table-delete-btn:hover {
+    color: #EF5466;
+    background-color: rgba(239, 84, 102, 0.15);
+}
+
+/* Couleur du plus */
+.table-plus-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.table-plus-btn:hover {
+    color: var(--primary);
+    background-color: rgba(88, 204, 2, 0.15);
+}
+
+/* Couleur du coeur */
+.table-heart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--text-secondary);
+}
+
+.table-heart-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-heart-btn.active {
+    color: #EF5466;
+}
+
+.table-heart-btn.active:hover {
+    color: #EF5466;
+    background-color: rgba(239, 84, 102, 0.15);
+}
+
+/* --- HEADERS DE SECTION STYLE DEEZER --- */
+
+.section-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.section-header .section-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* Le petit encadré "Voir tout" */
+.see-all-btn {
+    background-color: #23232D;
+    color: var(--text-main);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.see-all-btn:hover {
+    background-color: #393945;
+    text-decoration: none;
+}
+
+/* --- BUTTONS HEADER (Artiste/Album) --- */
+.header-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-main);
+    background-color: transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header-action-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-main);
+    transform: scale(1.05);
+}
+
+.header-action-btn.active {
+    color: #EF5466;
+    border-color: #EF5466;
+    fill: #EF5466;
+}
+
+.header-action-btn.active:hover {
+    background-color: rgba(239, 84, 102, 0.1);
+}
+
+.header-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #EF5466;
+    color: #EF5466;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header-delete-btn:hover {
+    background-color: rgba(239, 84, 102, 0.1);
+    transform: scale(1.05);
+}
+
+.header-edit-button {
+    background-color: transparent;
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.header-edit-button:hover {
+    border-color: var(--text-main);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.add-playlist-btn {
+    background-color: transparent;
+    font-weight: 700;
+    font-size: 20px;
+    padding: 5px 8px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-playlist-btn:hover {
+    color: var(--text-main);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   STYLES SPÉCIFIQUES AUX ERREURS (RESPONSIVE GRID STACK)
+   ========================================================================== */
+
+/* LE CONTENEUR PRINCIPAL */
+.error-wrapper {
+    display: grid;
+    grid-template-areas: "stack";
+    place-items: center;
+    min-height: 70vh;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 1. L'ARRIÈRE-PLAN (Chiffres) */
+.error-code-display {
+    grid-area: stack;
+    z-index: 1;
+    transform: translateY(-49%) scale(1.2);
+    font-size: 16rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    background: -webkit-linear-gradient(45deg, var(--text-main), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.05;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* 2. LE CONTENU (Vinyle + Texte + Boutons) */
+.error-content-layer {
+    grid-area: stack;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* --- LE VINYLE --- */
+.vinyl-record {
+    width: 230px;
+    height: 230px;
+    background: radial-gradient(circle, #1a1a1a 0%, #333 26%, #333 36%, #111 100%);
+    border-radius: 50%;
+    border: 3px solid #2a2a2a;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    margin-bottom: 40px;
+}
+
+.vinyl-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: white; font-size: 1.3em;
+    background: var(--primary);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+}
+
+/* --- TEXTES ET ACTIONS --- */
+.error-content-layer .page-title {
+    font-size: 2.5em;
+    margin: 0 0 15px 0;
+    line-height: 1.2;
+}
+
+.error-content-layer p {
+    font-size: 1.2em;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.error-content-layer .actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Styles spécifiques pour les boutons */
+.duo-button.outline {
+    align-content: center;
+    background-color: transparent;
+    border: 2px solid var(--text-secondary);
+    color: var(--text-main);
+}
+.duo-button.outline:hover {
+    border-color: var(--text-main);
+    background-color: rgba(255,255,255,0.1);
+    transform: scale(1.04);
+}
+
+/* --- ANIMATIONS (Toujours les mêmes) --- */
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes scratch {
+    0% { transform: rotate(0deg); } 10% { transform: rotate(50deg); }
+    20% { transform: rotate(20deg); } 30% { transform: rotate(70deg); }
+    40% { transform: rotate(-20deg); } 100% { transform: rotate(360deg); }
+}
+
+.error-404 .vinyl-record {
+    animation: spin 5s linear infinite;
+}
+.error-generic .vinyl-record {
+    position: relative;
+    right: 20px;
+    animation: scratch 3s infinite;
+    background: radial-gradient(circle, #341212 0%, #4a1a1a 26%, #4a1a1a 36%, #2a0a0a 100%);
+    border-color: #621818;
+}
+.error-generic .vinyl-label { background: #cf3434; }

@@ -1,57 +1,97 @@
 <?php
+// Fichier : index.php
+// Description : Page d'accueil affichant les tops artistes et albums.
 
-require_once __DIR__ . '/../inc/page.inc.php';
+require_once 'inc/page.inc.php';
+require_once 'inc/database.inc.php';
+require_once 'inc/utils.inc.php';
+require_once 'inc/sidebar_template.php';
+require_once 'inc/search_bar_template.php';
 
-$doInstall = $_GET['doInstall'] ?? '0';
-$content = null;
+// Création de l'objet page HTML
+$page = new HTMLPage("Lowify - Accueil");
 
-if ("1" === $doInstall) {
-    require_once __DIR__ . '/database_init.php';
-
-    $dbInitializer = new DatabaseInitializer();
-    $results = $dbInitializer->initialize();
-
-    $resultsHtml = '';
-    foreach ($results as $step => $result) {
-        $class = "bg-success-subtle text-success-emphasis";
-        if (str_contains($result, "Erreur")) {
-            $class = "bg-danger-subtle";
-        }
-
-        $resultsHtml .= "<tr><td class='{$class}'>{$step}</td><td class='{$class}'>{$result}</td></tr>";
-    }
-
-    $content = <<<HTML
-    <div class="container mt-5">
-        <h1>Installation de Lowify</h1>
-        <p>Résultats de l'installation :</p>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Étape</th>
-                    <th>Résultat</th>
-                </tr>
-            </thead>
-            <tbody>
-                {$resultsHtml}
-            </tbody>
-        </table>
-    </div>
-    HTML;
-} else {
-    $content = <<<HTML
-    <div class="container mt-5">
-        <h1>Installation de Lowify</h1>
-        <p>Bienvenue dans l'assistant d'installation de Lowify. Cliquez sur le bouton ci-dessous pour commencer l'installation.</p>
-        <a href="?doInstall=1" class="btn btn-primary">Démarrer l'installation</a>
-    </div>
-    HTML;
+// Tentative de connexion à la base de données
+try {
+    $db = new DatabaseManager(dsn: 'mysql:host=mysql;dbname=lowify;charset=utf8mb4', username: 'lowify', password: 'lowifypassword');
+} catch (PDOException $ex) {
+    // Gestion de l'erreur de connexion via le gestionnaire 500
+    exitWith500('db');
 }
 
+// Récupération de l'ID de la chanson en cours de lecture (pour le player bar)
+$nowPlayingSongId = $_GET['now_playing'] ?? null;
 
-echo (new HTMLPage('Installation de Lowify'))
-    ->setupBootstrap([
-        "class" => "bg-dark text-white p-4",
-        "data-bs-theme " => "dark"
-    ])->setupNavigationTransition()->addContent($content)
-    ->render();
+
+// --- LOGIQUE D'AFFICHAGE DES SECTIONS (GRILLES) ---
+
+$displayHTML = '<h1 class="page-title">Bienvenue sur Lowify</h1>';
+
+// 1. Top Trending Artistes : classés par nombre d'écoutes mensuelles (Top 5)
+$trendingArtists = $db->executeQuery("SELECT id, name, cover, monthly_listeners, is_liked FROM artist ORDER BY monthly_listeners DESC LIMIT 5");
+$displayHTML .= '
+    <div class="section-header">
+        <h2 class="section-title">🔥 Top Trending Artistes</h2>
+        <a href="artists.php" class="see-all-btn">Voir tout</a>
+    </div>' . renderArtistGrid($trendingArtists);
+
+// 2. Top Sorties : Albums les plus récents (Top 5)
+$recentAlbums = $db->executeQuery("SELECT id, name, cover, YEAR(release_date) as year, is_liked FROM album ORDER BY release_date DESC LIMIT 5");
+$displayHTML .= '
+    <div class="section-header">
+        <h2 class="section-title">💿 Top Sorties Récentes</h2>
+    </div>' . renderAlbumGrid($recentAlbums);
+
+// 3. Top Albums Notés : classés par note moyenne des chansons de l'album (Top 5)
+$topAlbums = $db->executeQuery("
+    SELECT
+        a.id,
+        a.name,
+        a.cover,
+        AVG(s.note) AS avg_note,
+        ar.name AS artist_name,
+        a.is_liked
+    FROM album a
+    JOIN song s ON a.id = s.album_id
+    JOIN artist ar ON a.artist_id = ar.id
+    GROUP BY a.id, a.name, a.cover, ar.name, a.is_liked
+    ORDER BY avg_note DESC
+    LIMIT 5
+");
+$displayHTML .= '
+    <div class="section-header">
+        <h2 class="section-title">⭐ Top Albums Notés</h2>
+    </div>' . renderAlbumGrid($topAlbums);
+
+
+// --- ASSEMBLAGE ET RENDU FINAL ---
+
+// Rendu des composants de l'interface
+$sidebarContent = renderSidebar($db);
+$playerHTML = renderPlayerBar($db, $nowPlayingSongId);
+$searchBarHTML = renderSearchBar();
+
+// Construction du contenu principal
+$mainContentHTML = <<<MAIN_CONTENT
+<div class="main-view">
+    {$searchBarHTML}
+    {$displayHTML}
+</div>
+MAIN_CONTENT;
+
+
+// Assemblage des éléments de la page
+$html = <<<HTML
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<div class="app-container">
+    {$sidebarContent}
+    {$mainContentHTML}
+</div>
+
+{$playerHTML}
+HTML;
+
+$page->addContent($html);
+echo $page->render();

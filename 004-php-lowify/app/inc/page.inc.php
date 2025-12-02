@@ -1,4 +1,10 @@
 <?php
+// Fichier : inc/page.inc.php
+
+// Démarrer la session en premier pour la persistance du lecteur (lowify)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 class HTMLPage
 {
@@ -16,6 +22,7 @@ class HTMLPage
         $this->title = $title;
     }
 
+    // METHODE MANQUANTE (Pour l'installation)
     public function setupBootstrap(array $bodyAttributes = []): self
     {
         foreach ($bodyAttributes as $name => $value) {
@@ -41,7 +48,6 @@ HTML);
     public function setupNavigationTransition(): self
     {
         $this->addRawStyle("@view-transition {navigation: auto;}");
-
         return $this;
     }
 
@@ -126,6 +132,8 @@ HTML;
         if (!empty($this->bodyAttributes)) {
             $attributes = [];
             foreach ($this->bodyAttributes as $name => $value) {
+                // S'assurer que les clés d'attributs sont propres (pas d'espaces)
+                $name = trim($name);
                 $attributes[] = $name . '="' . htmlspecialchars($value, ENT_QUOTES) . '"';
             }
             $bodyAttributes = implode(' ', $attributes);

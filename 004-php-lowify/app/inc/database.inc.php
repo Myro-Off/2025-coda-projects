@@ -1,15 +1,16 @@
 <?php
+// Fichier : inc/database.inc.php
 
 class DatabaseManager
 {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct(string $dsn, string $username = '', string $password = '')
     {
         try {
             $this->pdo = new PDO($dsn, $username, $password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->executeQuery("SELECT 1");
+            $this->pdo->query("SELECT 1");
         } catch (PDOException $e) {
             throw new PDOException("Erreur de connexion à la base de données : " . $e->getMessage());
         }
@@ -17,10 +18,6 @@ class DatabaseManager
 
     /**
      * Exécute une requête SQL de type SELECT avec des paramètres nommés.
-     * @param string $query La requête SQL à exécuter.
-     * @param array $params Les paramètres nommés à lier à la requête.
-     * @return array Un tableau 2D des résultats.
-     * @throws PDOException Si une erreur survient lors de l'exécution de la requête.
      */
     public function executeQuery(string $query, array $params = []): array
     {
@@ -35,10 +32,6 @@ class DatabaseManager
 
     /**
      * Exécute une requête SQL de type UPDATE/INSERT/DELETE avec des paramètres nommés.
-     * @param string $query La requête SQL à exécuter.
-     * @param array $params Les paramètres nommés à lier à la requête.
-     * @return int Le nombre de lignes affectées.
-     * @throws PDOException Si une erreur survient lors de l'exécution de la requête.
      */
     public function executeUpdate(string $query, array $params = []): int
     {
@@ -49,5 +42,13 @@ class DatabaseManager
         } catch (PDOException $e) {
             throw new PDOException("Erreur lors de l'exécution de la requête : " . $e->getMessage());
         }
+    }
+
+    /**
+     * Récupère l'ID de la dernière ligne insérée.
+     */
+    public function getLastInsertId(): int
+    {
+        return (int)$this->pdo->lastInsertId();
     }
 }
